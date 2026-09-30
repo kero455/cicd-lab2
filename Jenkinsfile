@@ -1,43 +1,44 @@
 pipeline {
-    agent { label 'agent-01' }
+    agent {
+        label 'agent-01'
+    }
 
     tools {
-    jdk 'jdk-11'
-    maven 'maven-3-5-4'
+        jdk 'jdk-11'
+        maven 'maven-3-5-4'
     }
 
     stages {
-
-        
         stage('Build java app') {
             steps {
-                sh 'mvn package install -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-        stage('build docker image') {
+        // stage('Test') {
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
+
+        stage('Build Docker Image') {
             steps {
                 sh 'docker build -t my-java-app:ver1 .'
             }
         }
     }
 
-    // post {
-    //     success {
-    //         echo 'Java Declarative Pipeline completed successfully!'
-    //     }
+    post {
+        success {
+            echo 'Java Declarative Pipeline completed successfully!'
+        }
 
-    //     failure {
-    //         echo 'Pipeline failed!'
-    //     }
+        failure {
+            echo 'Pipeline failed!'
+        }
 
-    //     always {
-    //         echo 'Pipeline finished.'
-    //     }
-    // }
+        always {
+            echo 'Pipeline finished.'
+        }
+    }
 }
